@@ -32,7 +32,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:ems="10"
-        android:hint="Usuario_SICOMITIO"
+        android:hint="Usuario"
         android:inputType="textPersonName"
         android:textColor="#FFFF"
         android:textColorHint="#F1F1F1"
