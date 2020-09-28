@@ -23,11 +23,9 @@ public class MainActivity extends AppCompatActivity {
     public void Siguiente (View view){
         Intent Siguiente = new Intent(this,Navegacion.class);
         startActivity(Siguiente);
-
     }
 
-    // Ayuda :,v
-    //    // segundo intento
-    //    //AMO A MI NOVIA UWU
-    // :V
+    //YA NO HAY CONFLICTOS
+
+
 }
