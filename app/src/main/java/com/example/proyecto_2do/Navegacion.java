@@ -67,10 +67,7 @@ public class Navegacion extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    public void gotoAyuda(){
-        Intent goAyuda = new Intent(Navegacion.this, Ayuda.class);
-        startActivity(goAyuda);
-    }
+
 
 
 }
