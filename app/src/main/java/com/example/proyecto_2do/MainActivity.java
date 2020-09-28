@@ -24,16 +24,4 @@ public class MainActivity extends AppCompatActivity {
         Intent Siguiente = new Intent(this,Navegacion.class);
         startActivity(Siguiente);
     }
-
-    //YA NO HAY CONFLICTOS
-
-    //BUllet For My Valentine
-
-    //LOZADO PLUA
-
-
-
-
-
-    //BAJO EL COMENTARIO
 }
