@@ -29,7 +29,7 @@ public class HomeFragment extends Fragment {
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-        agrNuevoRol = (ImageButton)root.findViewById(R.id.btnAgrRoles);
+        agrNuevoRol = (ImageButton)root.findViewById(R.id.btnKardex);
         agrNuevaMedida = (ImageButton)root.findViewById(R.id.btnAgrMedida);
         agrNuevoUsuario = (ImageButton)root.findViewById(R.id.btnAgrUser);
 

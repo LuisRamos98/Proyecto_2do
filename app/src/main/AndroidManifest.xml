@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".DevolucionProducto"></activity>
+        <activity android:name=".Kardex"></activity>
+        <activity android:name=".DevolucionProducto" />
         <activity android:name=".SalidaProducto" />
         <activity android:name=".IngresoProducto" />
         <activity android:name=".AsignarRoles" />
