@@ -15,7 +15,6 @@
         <activity android:name=".AsignarRoles" />
         <activity android:name=".AgregarUsuario" />
         <activity android:name=".AgregarMedidas" />
-        <activity android:name=".activity_agregar_medida" />
         <activity android:name=".AgregarRoles" />
         <activity
             android:name=".Navegacion"
