@@ -67,7 +67,4 @@ public class Navegacion extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    //PORFITAS FUNCIONA
-
-
 }
