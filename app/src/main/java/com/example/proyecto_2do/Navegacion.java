@@ -1,13 +1,16 @@
 package com.example.proyecto_2do;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
 
+import com.example.proyecto_2do.ui.ayuda.Ayuda;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -30,8 +33,11 @@ public class Navegacion extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Ayuda help = new Ayuda();
+                FragmentManager manager = getSupportFragmentManager();
+                manager.beginTransaction().add(R.id.nav_host_fragment, help).commit();
+                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();*/
             }
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -60,4 +66,11 @@ public class Navegacion extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
+    public void gotoAyuda(){
+        Intent goAyuda = new Intent(Navegacion.this, Ayuda.class);
+        startActivity(goAyuda);
+    }
+
+
 }
