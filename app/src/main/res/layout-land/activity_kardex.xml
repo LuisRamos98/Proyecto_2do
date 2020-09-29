@@ -7,7 +7,7 @@
     tools:context=".Kardex">
 
     <Button
-        android:id="@+id/btnMostrar"
+        android:id="@+id/btnMostrarInv"
         android:layout_width="197dp"
         android:layout_height="37dp"
         android:background="@drawable/button_rounded"
@@ -37,7 +37,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnMostrar"
+        app:layout_constraintTop_toBottomOf="@+id/btnMostrarInv"
         app:layout_constraintVertical_bias="0.992">
 
         <HorizontalScrollView
