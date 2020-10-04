@@ -24,42 +24,60 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
         implements Response.Listener<JSONObject>, Response.ErrorListener {
 
+    //variables de la activity
     public static int idEmpresa = 0;
     private Button login;
     private EditText txtUser, txtPass;
     Spinner sp_Empresas;
-    RequestQueue requestQueue;
-    JsonObjectRequest jsonObjectRequest;
     private Empresa empresa = null;
+    //arreglos para mostrar la informacion en el spiner
     private ArrayList<Empresa> listaEmpresas;
     private ArrayList<String> listafinal;
+    //Objetos que permiten la conexion con los webService
+    RequestQueue requestQueue;
+    JsonObjectRequest jsonObjectRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        requestQueue = Volley.newRequestQueue(this);
         listaEmpresas = new ArrayList<>();
+        //Instancia del objeto para la conexion remota
+        requestQueue = Volley.newRequestQueue(this);
+        //relacion logica-grafica
         login = (Button)findViewById(R.id.btn_login);
         txtUser = (EditText)findViewById(R.id.txtUser);
         txtPass = (EditText)findViewById(R.id.txtPass);
         sp_Empresas = (Spinner)findViewById(R.id.spEmpresa);
+        //llamada a metodo para cargar en el spiner las empresas
         ConsultarEmpresas();
+        //modificar el evento click
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //llamada al metodo para validar los datos en el login
                 Validarusuario();
             }
         });
     }
 
+    private void ConsultarEmpresas() {
+        //llamada al WebService
+        String url = "http://192.168.1.9/BDremota/consultas.php?opcion=1";
+        url = url.replace(" ","%20");
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
+        requestQueue.add(jsonObjectRequest);
+    }
+
     private void Validarusuario() {
         String user, pass;
+        //validamos que primero haya escogido una empresa antes de proceder a validar
         if(idEmpresa != 0){
             user = txtUser.getText().toString();
             pass = txtPass.getText().toString();
             String url = "http://192.168.1.9/BDremota/consultas.php?opcion=3&empresa="+idEmpresa+"&usuario="+user+"&pass="+pass;
             url = url.replace(" ","%20");
+            //llamada al WebService
             jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
             requestQueue.add(jsonObjectRequest);
         } else {
@@ -67,23 +85,19 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void ConsultarEmpresas() {
-        String url = "http://192.168.1.9/BDremota/consultas.php?opcion=1";
-        url = url.replace(" ","%20");
-        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
-        requestQueue.add(jsonObjectRequest);
-    }
-
     @Override
     public void onErrorResponse(VolleyError error) {
-
     }
 
+    //metodo donde trataremos las respuestas del WebService
     @Override
     public void onResponse(JSONObject response) {
         try {
+            //validamos la clave del objeto JSONArray
             if(response.has("empresa")) {
+                //Obtenemos el objeto JSONArray del objeto response que nos devuelve el WS
                 JSONArray json = response.getJSONArray("empresa");
+                //recorremos el arreglo y obtenemos los datos
                 for (int i = 0; i < json.length(); i++) {
                     empresa = new Empresa();
                     JSONObject jsonObject = null;
@@ -93,8 +107,10 @@ public class MainActivity extends AppCompatActivity
                     empresa.setNombreEmpresa(jsonObject.optString("nombre"));
                     listaEmpresas.add(empresa);
                 }
+                //llamada al metodo para llenar el spinner
                 obtenerlista();
             } else if(response.has("Usuario")){
+                //validar los datos deusario para el inicio de sesion
                 JSONArray json = response.getJSONArray("Usuario");
                 JSONObject jsonObject = json.getJSONObject(0);
                 int id = jsonObject.getInt("id");
@@ -127,11 +143,8 @@ public class MainActivity extends AppCompatActivity
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(i!=0){
                     idEmpresa = listaEmpresas.get(i-1).getIdEmpresa();
-                } else {
-
                 }
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
