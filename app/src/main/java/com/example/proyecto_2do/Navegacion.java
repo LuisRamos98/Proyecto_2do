@@ -1,11 +1,15 @@
 package com.example.proyecto_2do;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.Toast;
 
 import com.example.proyecto_2do.ui.ayuda.Ayuda;
+import com.example.proyecto_2do.ui.mantenimiento.HomeFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -22,6 +26,7 @@ import androidx.appcompat.widget.Toolbar;
 public class Navegacion extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
+    private int counter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +62,21 @@ public class Navegacion extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.navegacion, menu);
+
         return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_logout:
+                Intent login = new Intent(this, MainActivity.class);
+                startActivity(login);
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -67,4 +86,9 @@ public class Navegacion extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
+
+    @Override
+    public void onBackPressed() {
+        //
+    }
 }
