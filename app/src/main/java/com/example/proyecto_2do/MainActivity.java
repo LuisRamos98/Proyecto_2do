@@ -101,8 +101,11 @@ public class MainActivity extends AppCompatActivity
                 if(id != 0){
                     Intent sgt = new Intent(getApplicationContext(), Navegacion.class);
                     startActivity(sgt);
+                    Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "Datos Erroneos\nIntente Nuevamente", Toast.LENGTH_SHORT).show();
+                    txtUser.setText("");
+                    txtPass.setText("");
                 }
             }
         } catch (JSONException e) {
