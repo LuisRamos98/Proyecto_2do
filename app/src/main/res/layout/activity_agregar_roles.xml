@@ -29,7 +29,7 @@
         android:ems="10"
         android:hint="Rol"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintBottom_toTopOf="@+id/btn_RegistrarRol"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.523"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +37,7 @@
         app:layout_constraintVertical_bias="0.906" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btn_RegistrarRol"
         android:layout_width="233dp"
         android:layout_height="45dp"
         android:layout_marginStart="32dp"

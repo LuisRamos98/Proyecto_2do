@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity
     private EditText txtUser, txtPass;
     Spinner sp_Empresas;
     private Empresa empresa = null;
-    //arreglos para mostrar la informacion en el spiner
+    //arreglos para mostrar la informacion en el spinner
     private ArrayList<Empresa> listaEmpresas;
     private ArrayList<String> listafinal;
     //Objetos que permiten la conexion con los webService
@@ -72,14 +72,18 @@ public class MainActivity extends AppCompatActivity
     private void Validarusuario() {
         String user, pass;
         //validamos que primero haya escogido una empresa antes de proceder a validar
-        if(idEmpresa != 0){
+        if(idEmpresa != 0 ){
             user = txtUser.getText().toString();
             pass = txtPass.getText().toString();
-            String url = "http://192.168.1.9/BDremota/consultas.php?opcion=3&empresa="+idEmpresa+"&usuario="+user+"&pass="+pass;
-            url = url.replace(" ","%20");
-            //llamada al WebService
-            jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
-            requestQueue.add(jsonObjectRequest);
+            if(!user.isEmpty() && !pass.isEmpty()){
+                String url = "http://192.168.1.9/BDremota/consultas.php?opcion=3&empresa="+idEmpresa+"&usuario="+user+"&pass="+pass;
+                url = url.replace(" ","%20");
+                //llamada al WebService
+                jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
+                requestQueue.add(jsonObjectRequest);
+            } else {
+                Toast.makeText(this, "Ingrese los Campos", Toast.LENGTH_SHORT).show();
+            }
         } else {
             Toast.makeText(this, "Seleccione Una Empresa Por Favor", Toast.LENGTH_SHORT).show();
         }
@@ -148,7 +152,6 @@ public class MainActivity extends AppCompatActivity
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
         });
     }
