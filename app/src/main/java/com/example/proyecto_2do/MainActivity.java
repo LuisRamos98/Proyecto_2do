@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity
 
     //variables de la activity
     public static int idEmpresa = 0;
+    public static String IP = "192.168.1.2";
     private Button login;
     private EditText txtUser, txtPass;
     Spinner sp_Empresas;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity
 
     private void ConsultarEmpresas() {
         //llamada al WebService
-        String url = "http://192.168.1.9/BDremota/consultas.php?opcion=1";
+        String url = "http://"+IP+"/BDremota/consultas.php?empresa="+MainActivity.idEmpresa+"&opcion=1";
         url = url.replace(" ","%20");
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
         requestQueue.add(jsonObjectRequest);
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity
             user = txtUser.getText().toString();
             pass = txtPass.getText().toString();
             if(!user.isEmpty() && !pass.isEmpty()){
-                String url = "http://192.168.1.9/BDremota/consultas.php?opcion=3&empresa="+idEmpresa+"&usuario="+user+"&pass="+pass;
+                String url = "http://"+IP+"/BDremota/consultas.php?opcion=3&empresa="+idEmpresa+"&usuario="+user+"&pass="+pass;
                 url = url.replace(" ","%20");
                 //llamada al WebService
                 jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
@@ -96,38 +97,28 @@ public class MainActivity extends AppCompatActivity
     //metodo donde trataremos las respuestas del WebService
     @Override
     public void onResponse(JSONObject response) {
-        try {
-            //validamos la clave del objeto JSONArray
-            if(response.has("empresa")) {
-                //Obtenemos el objeto JSONArray del objeto response que nos devuelve el WS
-                JSONArray json = response.getJSONArray("empresa");
-                //recorremos el arreglo y obtenemos los datos
-                for (int i = 0; i < json.length(); i++) {
-                    empresa = new Empresa();
-                    JSONObject jsonObject = null;
-                    jsonObject = json.getJSONObject(i);
-                    empresa.setIdEmpresa(jsonObject.getInt("id"));
-                    empresa.setRucEmpresa(jsonObject.optString("ruc"));
-                    empresa.setNombreEmpresa(jsonObject.optString("nombre"));
-                    listaEmpresas.add(empresa);
-                }
-                //llamada al metodo para llenar el spinner
-                obtenerlista();
-            } else if(response.has("Usuario")){
-                //validar los datos deusario para el inicio de sesion
-                JSONArray json = response.getJSONArray("Usuario");
-                JSONObject jsonObject = json.getJSONObject(0);
-                int id = jsonObject.getInt("id");
-                if(id != 0){
-                    Intent sgt = new Intent(getApplicationContext(), Navegacion.class);
-                    startActivity(sgt);
-                    Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show();
-                    this.finish();
-                } else {
-                    Toast.makeText(this, "Datos Erroneos\nIntente Nuevamente", Toast.LENGTH_SHORT).show();
-                    txtUser.setText("");
-                    txtPass.setText("");
-                }
+        if(response.has("empresa")) {
+            CargarEmpresas(response);
+        } else if(response.has("Usuario")){
+            ValidarRespuestaUsuario(response);
+        }
+    }
+
+    private void ValidarRespuestaUsuario(JSONObject response) {
+        try{
+            //validar los datos deusario para el inicio de sesion
+            JSONArray json = response.getJSONArray("Usuario");
+            JSONObject jsonObject = json.getJSONObject(0);
+            int id = jsonObject.getInt("id");
+            if(id != 0){
+                Intent sgt = new Intent(getApplicationContext(), Navegacion.class);
+                startActivity(sgt);
+                Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show();
+                this.finish();
+            } else {
+                Toast.makeText(this, "Datos Erroneos\nIntente Nuevamente", Toast.LENGTH_SHORT).show();
+                txtUser.setText("");
+                txtPass.setText("");
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -135,7 +126,29 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void obtenerlista() {
+    private void CargarEmpresas(JSONObject response){
+        try{
+            //Obtenemos el objeto JSONArray del objeto response que nos devuelve el WS
+            JSONArray json = response.getJSONArray("empresa");
+            //recorremos el arreglo y obtenemos los datos
+            for (int i = 0; i < json.length(); i++) {
+                empresa = new Empresa();
+                JSONObject jsonObject = null;
+                jsonObject = json.getJSONObject(i);
+                empresa.setIdEmpresa(jsonObject.getInt("id"));
+                empresa.setRucEmpresa(jsonObject.optString("ruc"));
+                empresa.setNombreEmpresa(jsonObject.optString("nombre"));
+                listaEmpresas.add(empresa);
+            }
+            //llamada al metodo para llenar el spinner
+            ObtenerLista();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void ObtenerLista() {
         listafinal = new ArrayList<String>();
         listafinal.add("Seleccione");
         for(int i=0; i<listaEmpresas.size(); i++){

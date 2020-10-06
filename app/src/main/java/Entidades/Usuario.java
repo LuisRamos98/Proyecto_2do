@@ -8,10 +8,10 @@ public class Usuario {
     private String Nombre;
     private String Apellido;
     private String Correo;
+    private String user;
     private int Id_Rol;
 
-    public Usuario(int id_Empresa, int id_Usuario, int estado, String CI,
-                   String nombre, String apellido, String correo, int id_Rol) {
+    public Usuario(int id_Empresa, int id_Usuario, int estado, String CI, String nombre, String apellido, String correo, String user, int id_Rol) {
         Id_Empresa = id_Empresa;
         Id_Usuario = id_Usuario;
         Estado = estado;
@@ -19,6 +19,7 @@ public class Usuario {
         Nombre = nombre;
         Apellido = apellido;
         Correo = correo;
+        this.user = user;
         Id_Rol = id_Rol;
     }
 
@@ -79,6 +80,14 @@ public class Usuario {
 
     public void setCorreo(String correo) {
         Correo = correo;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 
     public int getId_Rol() {

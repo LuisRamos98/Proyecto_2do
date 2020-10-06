@@ -43,7 +43,7 @@ public class AgregarRoles extends AppCompatActivity
     private void RegistrarRol() {
         String rol = txtRol.getText().toString();
         if(!rol.isEmpty()){
-            String url = "http://192.168.1.9/BDremota/wsJSONRegistroRol.php?empresa="+MainActivity.idEmpresa+"&rol="+rol;
+            String url = "http://"+MainActivity.IP+"/BDremota/wsRegistroRol.php?empresa="+MainActivity.idEmpresa+"&rol="+rol;
             url = url.replace(" ","%20");
             jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
             requestQueue.add(jsonObjectRequest);
@@ -60,16 +60,22 @@ public class AgregarRoles extends AppCompatActivity
     }
 
     private void ValidarRegistroRol(JSONObject response) {
-        int id_rol;
+        int respuesta;
         try {
             JSONArray jsonArray = response.getJSONArray("rol");
             JSONObject jsonObject = jsonArray.getJSONObject(0);
-            id_rol = jsonObject.getInt("id");
-            if(id_rol != 0){
-                Toast.makeText(this, "Registro Con Exito", Toast.LENGTH_SHORT).show();
-                txtRol.setText("");
-            } else {
-                Toast.makeText(this, "Registro ya Existente\nIntente Nuevamente", Toast.LENGTH_SHORT).show();
+            respuesta = jsonObject.getInt("respuesta");
+            switch (respuesta){
+                case 1:
+                    Toast.makeText(this, "Registro Con Exito", Toast.LENGTH_SHORT).show();
+                    txtRol.setText("");
+                break;
+                case 0:
+                    Toast.makeText(this, "Registro ya Existente\nIntente Nuevamente", Toast.LENGTH_SHORT).show();
+                break;
+                case -1:
+                    Toast.makeText(this, "Error al Registrar", Toast.LENGTH_SHORT).show();
+                break;
             }
         } catch (JSONException e) {
             e.printStackTrace();
