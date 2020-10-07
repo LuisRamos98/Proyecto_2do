@@ -25,7 +25,7 @@ public class AsignarRoles extends AppCompatActivity
     private Spinner spRol1, spRol2, spUsuario;
     private Button btnAsignar;
 
-    int idRolViejo, idRolNuevo, idUsuario;
+    int idRolViejo=-1, idRolNuevo=-1, idUsuario=-1;
     Rol rol = null;
     Usuario usuario = null;
     ArrayList<Rol> listaRoles;
@@ -52,15 +52,21 @@ public class AsignarRoles extends AppCompatActivity
         btnAsignar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(idRolViejo==-1 || idRolNuevo==-1 || idUsuario==-1){
+                if(idRolViejo!=-1 && idRolNuevo!=-1 && idUsuario!=-1){
                     ActualizarRol();
+                } else {
+                    Toast.makeText(AsignarRoles.this, "Seleccione los campos", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
     private void ActualizarRol() {
-
+        //http://localhost/BDremota/wsActualizarRol.php?empresa=1&rol=2&usuario=1
+        String url = "http://"+MainActivity.IP+"/BDremota/wsActualizarRol.php?empresa="+MainActivity.idEmpresa+"&rol="+idRolNuevo+"&usuario="+idUsuario;
+        url = url.replace(" ","%20");
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
+        requestQueue.add(jsonObjectRequest);
     }
 
     private void ConsultarUsuarios() {
@@ -83,6 +89,33 @@ public class AsignarRoles extends AppCompatActivity
             CargarRoles(response);
         } else if(response.has("usuario")){
             CargarUsuarios(response);
+        } else if(response.has("Usuario")){
+            ValidarUpdateRol(response);
+        }
+    }
+
+    private void ValidarUpdateRol(JSONObject response) {
+        int respuesta;
+        try{
+            JSONArray jsonArray = response.getJSONArray("Usuario");
+            JSONObject jsonObject = jsonArray.getJSONObject(0);
+            respuesta = jsonObject.getInt("respuesta");
+            switch (respuesta) {
+                case 1:
+                    Toast.makeText(this, "Asignación Exitosa", Toast.LENGTH_SHORT).show();
+                    ConsultarRoles();
+                    ConsultarUsuarios();
+                    break;
+                case 0:
+                    Toast.makeText(this, "Error Al Asignar", Toast.LENGTH_SHORT).show();
+                    break;
+                case -1:
+                    Toast.makeText(this, "Error Al Asignar", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -148,11 +181,9 @@ public class AsignarRoles extends AppCompatActivity
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(i!=0){
                     idRolViejo = listaRoles.get(i-1).getId_Rol();
-                    Toast.makeText(AsignarRoles.this, String.valueOf(idRolViejo), Toast.LENGTH_SHORT).show();
                     ConsultarUsuarios();
                 } else {
                     idRolViejo = -1;
-                    Toast.makeText(AsignarRoles.this, String.valueOf(idRolViejo), Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
@@ -163,10 +194,8 @@ public class AsignarRoles extends AppCompatActivity
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(i!=0){
                     idRolNuevo = listaRoles.get(i-1).getId_Rol();
-                    Toast.makeText(AsignarRoles.this, String.valueOf(idRolNuevo), Toast.LENGTH_SHORT).show();
                 } else {
                     idRolNuevo = -1;
-                    Toast.makeText(AsignarRoles.this, String.valueOf(idRolNuevo), Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
@@ -177,7 +206,7 @@ public class AsignarRoles extends AppCompatActivity
     private void ObtenerListaUsuario() {
         listaUsuariosFinal = new ArrayList<String>();
         listaUsuariosFinal.add("Seleccione");
-        for(int i=1; i<listaUsuarios.size(); i++){
+        for(int i=0; i<listaUsuarios.size(); i++){
             listaUsuariosFinal.add("CI: "+listaUsuarios.get(i).getCI()
                     +" - Usuario: "+listaUsuarios.get(i).getUser());
         }
@@ -189,10 +218,8 @@ public class AsignarRoles extends AppCompatActivity
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(i!=0){
                     idUsuario = listaUsuarios.get(i-1).getId_Usuario();
-                    Toast.makeText(AsignarRoles.this, String.valueOf(idUsuario), Toast.LENGTH_SHORT).show();
                 } else {
                     idUsuario = -1;
-                    Toast.makeText(AsignarRoles.this, String.valueOf(idUsuario)+" aqui", Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
