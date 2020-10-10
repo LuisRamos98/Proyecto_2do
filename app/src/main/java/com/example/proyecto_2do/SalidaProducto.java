@@ -24,13 +24,12 @@ public class SalidaProducto extends AppCompatActivity
 
     private String codigoSalida;
     private int cantidad, idSalida;
-    private int idCategoriaSelect, idProductoSelect;
-    private double precioUnitario;
+    private int idCategoriaSelect;
 
     Categoria categoria = null;
     ArrayList<Categoria> listaCategoria;
     ArrayList<String> listaCategoriaFinal;
-    Producto producto = null;
+    Producto productoSeleccionado = new Producto();
     ArrayList<Producto> listaProducto;
     ArrayList<String> listaProductoFinal;
 
@@ -73,7 +72,11 @@ public class SalidaProducto extends AppCompatActivity
             public void onClick(View view) {
                 if(!txtCantidad.getText().toString().isEmpty()){
                     cantidad = Integer.parseInt(txtCantidad.getText().toString());
-                    RegistrarSalidaProducto();
+                    if(productoSeleccionado.getUnidades()>=cantidad){
+                        RegistrarSalidaProducto();
+                    } else {
+                        Toast.makeText(SalidaProducto.this, "Solo existen: "+String.valueOf(productoSeleccionado.getUnidades())+" unidades", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(SalidaProducto.this, "Campos Vacios\nIntente Nuevamente", Toast.LENGTH_SHORT).show();
                 }
@@ -82,10 +85,11 @@ public class SalidaProducto extends AppCompatActivity
     }
 
     private void RegistrarSalidaProducto() {
-        double valorTotal = cantidad*precioUnitario;
+        double valorTotal = cantidad*productoSeleccionado.getPrecio_Unitario();
         //http://localhost/BDremota/wsRegistroSalidaProducto.php?empresa=1&salida=1&producto=1&cantidad=2&pu=2&vt=4
         String url = "http://"+MainActivity.IP+"/BDremota/wsRegistroSalidaProducto.php?empresa="+MainActivity.idEmpresa
-                +"&salida="+idSalida+"&producto="+idProductoSelect+"&cantidad="+cantidad+"&pu="+precioUnitario+"&vt="+valorTotal;
+                +"&salida="+idSalida+"&producto="+productoSeleccionado.getId_Producto()+"&cantidad="+cantidad
+                +"&pu="+productoSeleccionado.getPrecio_Unitario()+"&vt="+valorTotal;
         url = url.replace(" ","%20");
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
         requestQueue.add(jsonObjectRequest);
@@ -122,6 +126,28 @@ public class SalidaProducto extends AppCompatActivity
             CargarProductos(response);
         } else if(response.has("salida_producto")){
             ValidarRegistroSP(response);
+        } else if(response.has("producto")){
+            ValidarActualizarDatos(response);
+        }
+    }
+
+    private void ValidarActualizarDatos(JSONObject response) {
+        int respuesta;
+        try {
+            JSONArray jsonArray = response.getJSONArray("producto");
+            JSONObject jsonObject = jsonArray.getJSONObject(0);
+            respuesta = jsonObject.getInt("respuesta");
+            switch (respuesta){
+                case 1:
+                    Toast.makeText(this, "Datos actualizados", Toast.LENGTH_SHORT).show();
+                    break;
+                case 0:
+                    Toast.makeText(this, "No se Pudieron Actualizar los Datos", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -137,7 +163,7 @@ public class SalidaProducto extends AppCompatActivity
                     txtCantidad.setText("");
                     ObtenerListaProducto();
                     ObtenerListaCategoria();
-                    //ActualizarDatos();
+                    ActualizarDatos();
                     break;
                 case 0:
                     Toast.makeText(this, "Error al Registrar", Toast.LENGTH_SHORT).show();
@@ -147,6 +173,16 @@ public class SalidaProducto extends AppCompatActivity
             e.printStackTrace();
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void ActualizarDatos() {
+        double cantidadfinal = productoSeleccionado.getUnidades()-cantidad;
+        double preciofinal = (productoSeleccionado.getPrecio_Total()-productoSeleccionado.getPrecio_Unitario()*cantidad)/cantidadfinal;
+        String url = "http://"+MainActivity.IP+"/BDremota/wsActualizarProducto.php?empresa="+MainActivity.idEmpresa+"&producto="
+                +productoSeleccionado.getId_Producto()+"&unidades="+cantidadfinal+"&precio="+preciofinal+"&total="+(cantidadfinal*preciofinal);
+        url = url.replace(" ","%20");
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
+        requestQueue.add(jsonObjectRequest);
     }
 
     private void ValidarRegistroSalida(JSONObject response) {
@@ -223,7 +259,7 @@ public class SalidaProducto extends AppCompatActivity
         try {
             JSONArray jsonArray= response.getJSONArray("productos");
             for(int i=0; i<jsonArray.length(); i++){
-                producto = new Producto();
+                Producto producto = new Producto();
                 JSONObject jsonObject = null;
                 jsonObject = jsonArray.getJSONObject(i);
                 if(jsonObject.getInt("categoria")==idCategoriaSelect){
@@ -260,10 +296,9 @@ public class SalidaProducto extends AppCompatActivity
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(i==0){
-                    idProductoSelect = -1;
+                    productoSeleccionado.setId_Estado(-1);
                 } else {
-                    idProductoSelect = listaProducto.get(i-1).getId_Producto();
-                    precioUnitario = listaProducto.get(i-1).getPrecio_Unitario();
+                    productoSeleccionado = listaProducto.get(i-1);
                 }
             }
             @Override
@@ -272,10 +307,7 @@ public class SalidaProducto extends AppCompatActivity
     }
 
     @Override
-    public void onErrorResponse(VolleyError error) {
-
-    }
-
+    public void onErrorResponse(VolleyError error) {}
     public void HabilitarCampos(){
         spCategoria.setEnabled(true);
         spNombre.setEnabled(true);

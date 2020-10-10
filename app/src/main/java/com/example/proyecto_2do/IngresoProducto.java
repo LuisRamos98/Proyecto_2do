@@ -25,13 +25,13 @@ public class IngresoProducto extends AppCompatActivity
     private String codigo;
     private int cantidad;
     private double precioUnitario;
-    private int idCategoriaSelect, idProductoSelect;
+    private int idCategoriaSelect;
     private int idIngreso;
 
     Categoria categoria = null;
     ArrayList<Categoria> listaCategoria;
     ArrayList<String> listaCategoriaFinal;
-    Producto producto = null;
+    Producto productoSeleccionado = new Producto();
     ArrayList<Producto> listaProducto;
     ArrayList<String> listaProductoFinal;
 
@@ -87,9 +87,8 @@ public class IngresoProducto extends AppCompatActivity
 
     private void RegistrarIngresoProducto() {
         double valorTotal = cantidad*precioUnitario;
-        //http://localhost/BDremota/wsRegistroSalidaProducto.php?empresa=1&salida=1&producto=1&cantidad=2&pu=2&vt=4
         String url = "http://"+MainActivity.IP+"/BDremota/wsRegistroIngresoProducto.php?empresa="+MainActivity.idEmpresa
-                +"&ingreso="+idIngreso+"&producto="+idProductoSelect+"&cantidad="+cantidad+"&pu="+precioUnitario+"&vt="+valorTotal;
+                +"&ingreso="+idIngreso+"&producto="+productoSeleccionado.getId_Producto()+"&cantidad="+cantidad+"&pu="+precioUnitario+"&vt="+valorTotal;
         url = url.replace(" ","%20");
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
         requestQueue.add(jsonObjectRequest);
@@ -126,6 +125,28 @@ public class IngresoProducto extends AppCompatActivity
             CargarProductos(response);
         } else if(response.has("ingreso_producto")){
             ValidarRegistroIP(response);
+        } else if(response.has("producto")){
+            ValidarActualizarDatos(response);
+        }
+    }
+
+    private void ValidarActualizarDatos(JSONObject response) {
+        int respuesta;
+        try {
+            JSONArray jsonArray = response.getJSONArray("producto");
+            JSONObject jsonObject = jsonArray.getJSONObject(0);
+            respuesta = jsonObject.getInt("respuesta");
+            switch (respuesta){
+                case 1:
+                    Toast.makeText(this, "Datos actualizados", Toast.LENGTH_SHORT).show();
+                    break;
+                case 0:
+                    Toast.makeText(this, "No se Pudieron Actualizar los Datos", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -142,7 +163,7 @@ public class IngresoProducto extends AppCompatActivity
                     txtCantidad.setText("");
                     ObtenerListaProducto();
                     ObtenerListaCategoria();
-                    //ActualizarDatos();
+                    ActualizarDatos();
                     break;
                 case 0:
                     Toast.makeText(this, "Error al Registrar", Toast.LENGTH_SHORT).show();
@@ -152,6 +173,16 @@ public class IngresoProducto extends AppCompatActivity
             e.printStackTrace();
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void ActualizarDatos() {
+        double cantidadfinal = cantidad+productoSeleccionado.getUnidades();
+        double preciofinal = (precioUnitario*cantidad+productoSeleccionado.getPrecio_Total())/cantidadfinal;
+        String url = "http://"+MainActivity.IP+"/BDremota/wsActualizarProducto.php?empresa="+MainActivity.idEmpresa+"&producto="
+                +productoSeleccionado.getId_Producto()+"&unidades="+cantidadfinal+"&precio="+preciofinal+"&total="+(cantidadfinal*preciofinal);
+        url = url.replace(" ","%20");
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
+        requestQueue.add(jsonObjectRequest);
     }
 
     private void ValidarRegistroIngreso(JSONObject response) {
@@ -228,7 +259,7 @@ public class IngresoProducto extends AppCompatActivity
         try {
             JSONArray jsonArray= response.getJSONArray("productos");
             for(int i=0; i<jsonArray.length(); i++){
-                producto = new Producto();
+                Producto producto = new Producto();
                 JSONObject jsonObject = null;
                 jsonObject = jsonArray.getJSONObject(i);
                 if(jsonObject.getInt("categoria")==idCategoriaSelect){
@@ -265,9 +296,9 @@ public class IngresoProducto extends AppCompatActivity
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(i==0){
-                    idProductoSelect = -1;
+                    productoSeleccionado.setId_Producto(-1);
                 } else {
-                    idProductoSelect = listaProducto.get(i-1).getId_Producto();
+                    productoSeleccionado = listaProducto.get(i-1);
                 }
             }
             @Override

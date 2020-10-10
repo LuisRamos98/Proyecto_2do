@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity
 
     //variables de la activity
     public static int idEmpresa = 0;
-    public static String IP = "192.168.1.2";
+    public static String IP = "192.168.1.7";
     private Button login;
     private EditText txtUser, txtPass;
     Spinner sp_Empresas;
