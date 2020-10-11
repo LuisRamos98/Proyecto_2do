@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity
 
     //variables de la activity
     public static int idEmpresa = 0;
-    public static String IP = "192.168.0.7";
+    public static String IP = "192.168.1.7";
     private Button login;
     private EditText txtUser, txtPass;
     Spinner sp_Empresas;
@@ -97,13 +97,14 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    //metodo donde se muestra la respuesta en caso de fallar la llamada al ws
     @Override
-    public void onErrorResponse(VolleyError error) {
-    }
+    public void onErrorResponse(VolleyError error) {}
 
     //metodo donde trataremos las respuestas del WebService
     @Override
     public void onResponse(JSONObject response) {
+        //preguntamos si la respuesra es la que deseamos obtener
         if(response.has("empresa")) {
             CargarEmpresas(response);
         } else if(response.has("Usuario")){

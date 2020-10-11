@@ -22,12 +22,14 @@ import java.util.ArrayList;
 public class IngresoProducto extends AppCompatActivity
         implements Response.Listener<JSONObject>, Response.ErrorListener {
 
+    //variables de la activity
     private String codigo;
     private int cantidad;
     private double precioUnitario;
     private int idCategoriaSelect;
     private int idIngreso;
 
+    //arreglos para mostrar la informacion en el spinner
     Categoria categoria = null;
     ArrayList<Categoria> listaCategoria;
     ArrayList<String> listaCategoriaFinal;
@@ -35,10 +37,12 @@ public class IngresoProducto extends AppCompatActivity
     ArrayList<Producto> listaProducto;
     ArrayList<String> listaProductoFinal;
 
+    //variables de la activity
     private EditText txtCodigoIngreso, txtPrecioUnitario, txtCantidad;
     private Spinner spCategoria, spNombre;
     private Button btnRegistrar, btnIngresar;
 
+    //Objetos que permiten la conexion con los webService
     RequestQueue requestQueue;
     JsonObjectRequest jsonObjectRequest;
 
@@ -49,13 +53,16 @@ public class IngresoProducto extends AppCompatActivity
 
         listaCategoria = new ArrayList<>();
         listaProducto = new ArrayList<>();
+        //Instancia del objeto para la conexion remota
         requestQueue = Volley.newRequestQueue(this);
-
+        //relacion logica-grafica
         txtCodigoIngreso = (EditText)findViewById(R.id.txtCodigoIngreso);
         btnRegistrar = (Button)findViewById(R.id.btnRegistrarIngreso);
+        //modificar el evento click
         btnRegistrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //validamos que los campos no se encuentren vacios para poder registrar
                 codigo = txtCodigoIngreso.getText().toString();
                 if(!codigo.isEmpty()){
                     RegistrarIngreso();
@@ -64,16 +71,19 @@ public class IngresoProducto extends AppCompatActivity
                 }
             }
         });
-
+        //relacion logica-grafica
         spCategoria = (Spinner)findViewById(R.id.spCategoria);
         spNombre = (Spinner)findViewById(R.id.spNombreProducto);
         txtCantidad = (EditText)findViewById(R.id.txtCantidadEntrada);
         txtPrecioUnitario = (EditText)findViewById(R.id.txtPrecioUnitario);
         btnIngresar = (Button)findViewById(R.id.btnIngresarProducto);
+        //llamada a la funcion para inhabilitar campos
         InhabilitarCampos();
+        //modificar el evento click
         btnIngresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //validamos que los campos no se encuentren vacios para poder registrar
                 if(!txtPrecioUnitario.getText().toString().isEmpty() && !txtCantidad.getText().toString().isEmpty()){
                     cantidad = Integer.parseInt(txtCantidad.getText().toString());
                     precioUnitario = Double.parseDouble(txtPrecioUnitario.getText().toString());
@@ -85,7 +95,9 @@ public class IngresoProducto extends AppCompatActivity
         });
     }
 
+    //metodo para llamar al ws y registrar la accion de ingresar producto
     private void RegistrarIngresoProducto() {
+        //llamada al WebService para registrar los datos, la respuesta la devolvera en el Onresponse()
         double valorTotal = cantidad*precioUnitario;
         String url = "http://"+MainActivity.IP+"/BDremota/wsRegistroIngresoProducto.php?empresa="+MainActivity.idEmpresa
                 +"&ingreso="+idIngreso+"&producto="+productoSeleccionado.getId_Producto()+"&cantidad="+cantidad+"&pu="+precioUnitario+"&vt="+valorTotal;
@@ -94,29 +106,37 @@ public class IngresoProducto extends AppCompatActivity
         requestQueue.add(jsonObjectRequest);
     }
 
+    //metodo para llamar al ws y registrar la accion de ingreso
     private void RegistrarIngreso() {
+        //llamada al WebService para registrar los datos, la respuesta la devolvera en el Onresponse()
         String url = "http://"+MainActivity.IP+"/BDremota/wsRegistroIngreso.php?empresa="+MainActivity.idEmpresa+"&codigo="+codigo;
         url = url.replace(" ","%20");
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
         requestQueue.add(jsonObjectRequest);
     }
 
+    //metodo para llamar al ws y consultar las categorias
     private void ConsultarCategorias(){
+        //llamada al WebService para registrar los datos, la respuesta la devolvera en el Onresponse()
         String url = "http://"+MainActivity.IP+"/BDremota/consultas.php?opcion=5&empresa="+MainActivity.idEmpresa;
         url = url.replace(" ","%20");
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
         requestQueue.add(jsonObjectRequest);
     }
 
+    //metodo para llamar al ws y consultar los productos
     private void ConsultarProductos() {
+        //llamada al WebService para registrar los datos, la respuesta la devolvera en el Onresponse()
         String url = "http://"+MainActivity.IP+"/BDremota/consultas.php?opcion=6&empresa="+MainActivity.idEmpresa;
         url = url.replace(" ","%20");
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
         requestQueue.add(jsonObjectRequest);
     }
 
+    //metodo donde trataremos las respuestas del WebService
     @Override
     public void onResponse(JSONObject response) {
+        //preguntamos si la respuesra es la que deseamos obtener
         if(response.has("ingreso")){
             ValidarRegistroIngreso(response);
         } else if(response.has("categorias")){
@@ -130,12 +150,17 @@ public class IngresoProducto extends AppCompatActivity
         }
     }
 
+    //valida que respuesta de la consulta nos devuelve el ws
     private void ValidarActualizarDatos(JSONObject response) {
         int respuesta;
         try {
+            //obtenemos el objeto jsonArray del objeto que nos responde el ws
             JSONArray jsonArray = response.getJSONArray("producto");
+            //obtenemos el primer elemento del arreglo
             JSONObject jsonObject = jsonArray.getJSONObject(0);
+            //obtenemos el dato cuya clave sea respuesta
             respuesta = jsonObject.getInt("respuesta");
+            //validamos la respuesta
             switch (respuesta){
                 case 1:
                     Toast.makeText(this, "Datos actualizados", Toast.LENGTH_SHORT).show();
@@ -306,6 +331,7 @@ public class IngresoProducto extends AppCompatActivity
         });
     }
 
+    //metodo donde se muestra la respuesta en caso de fallar la llamada al ws
     @Override
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(this, "Error: "+error.toString(), Toast.LENGTH_SHORT).show();
