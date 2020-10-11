@@ -68,7 +68,6 @@ public class Kardex extends AppCompatActivity
 
     //FUNCION QUE ADQUIERE Y CREA LA TABLA DE CONTACTOS
     private ArrayList<String[]> ObtenerListaProducto(){
-        //rows.add(new String[]{"1","pedro","lopez","persona","user"});
         for(int i=0; i<listaProducto.size(); i++){
             rows.add(new String[]{String.valueOf(listaProducto.get(i).getCategoria()), listaProducto.get(i).getNombre_Producto(),
                     String.valueOf(listaProducto.get(i).getUnidades()),String.valueOf(listaProducto.get(i).getPrecio_Unitario()),
