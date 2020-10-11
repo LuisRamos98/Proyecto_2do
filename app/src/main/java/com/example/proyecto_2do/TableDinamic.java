@@ -63,6 +63,7 @@ public class TableDinamic {
         tableLayout.addView(tableRow);
     }
 
+
     //CREA LA TABLE EN SI MISMA
     private void createDataTable(ArrayList<String[]>data){
         tableLayout.removeAllViews();
