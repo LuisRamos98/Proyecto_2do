@@ -31,12 +31,11 @@ public class Kardex extends AppCompatActivity
     int idCategoriaSelect;
 
     ArrayList<Producto> listaProducto;
-    ArrayList<String> listaProductoFinal;
     ArrayList<Categoria> listaCategoria;
     ArrayList<String> listaCategoriaFinal;
 
     private TableLayout tableLayout;
-    private String[] header ={"ID","Nombre","Telf","Tipo", "usuario"};
+    private String[] header ={"Categoria","Producto","Cantidad","Precio Unitario", "Total"};
     private ArrayList<String[]> rows = new ArrayList<>();
     private TableDinamic tableDinamic;
 
@@ -51,7 +50,6 @@ public class Kardex extends AppCompatActivity
 
         listaProducto = new ArrayList<>();
         listaCategoria = new ArrayList<>();
-        listaProducto = new ArrayList<>();
         requestQueue = Volley.newRequestQueue(this);
 
         //DECLARACION Y ASIGNACION DE VARIABLES
@@ -59,18 +57,23 @@ public class Kardex extends AppCompatActivity
 
         tableDinamic = new TableDinamic(tableLayout, getApplicationContext());
         tableDinamic.addHeader(header);
-        tableDinamic.addData(getClients());
+        tableDinamic.addData(ObtenerListaProducto());
         ConsultarCategorias();
     }
 
     //FUNCION QUE MUESTRA EN UNA TABLA LOS CLIENTES
     public void MostrarContact (View view){
-        tableDinamic.addData(getClients());
+        tableDinamic.addData(ObtenerListaProducto());
     }
 
     //FUNCION QUE ADQUIERE Y CREA LA TABLA DE CONTACTOS
-    private ArrayList<String[]> getClients(){
-        rows.add(new String[]{"1","pedro","lopez","persona","user"});
+    private ArrayList<String[]> ObtenerListaProducto(){
+        //rows.add(new String[]{"1","pedro","lopez","persona","user"});
+        for(int i=0; i<listaProducto.size(); i++){
+            rows.add(String.valueOf(listaProducto.get(i).getCategoria()), listaProducto.get(i).getNombre_Producto(),
+                    String.valueOf(listaProducto.get(i).getUnidades()),String.valueOf(listaProducto.get(i).getPrecio_Unitario()),
+                    String.valueOf(listaProducto.get(i).getPrecio_Total()));
+        }
         return rows;
     }
 
@@ -143,12 +146,35 @@ public class Kardex extends AppCompatActivity
                     listaProducto.add(producto);
                 }
             }
-            //ObtenerListaProducto();
+            ObtenerListaProducto();
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
+
+    /*private void ObtenerListaProducto() {
+        listaProductoFinal = new ArrayList<String>();
+        listaProductoFinal.add("Seleccione");
+        for(int i=0; i<listaProducto.size(); i++){
+            listaProductoFinal.add(listaProducto.get(i).getNombre_Producto());
+        }
+        ArrayAdapter<CharSequence> adaptador =
+                new ArrayAdapter(this, android.R.layout.simple_spinner_item, listaProductoFinal);
+        spNombre.setAdapter(adaptador);
+        spNombre.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(i==0){
+                    productoSeleccionado.setId_Producto(-1);
+                } else {
+                    productoSeleccionado = listaProducto.get(i-1);
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
+    }*/
 
     private void ObtenerListaCategoria() {
         listaCategoriaFinal = new ArrayList<String>();
