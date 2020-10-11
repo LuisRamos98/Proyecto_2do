@@ -1,12 +1,11 @@
 package com.example.proyecto_2do.ui.ayuda;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
 
 import com.example.proyecto_2do.R;
 
@@ -23,9 +22,11 @@ public class Ayuda extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
+    // DECLARACIONES DE VARIABLES
     private String mParam1;
     private String mParam2;
 
+    //CONSTRUCTOR
     public Ayuda() {
         // Required empty public constructor
     }

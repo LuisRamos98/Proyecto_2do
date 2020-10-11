@@ -1,24 +1,31 @@
 package com.example.proyecto_2do;
 
-import Entidades.Empresa;
-import android.widget.*;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import Entidades.Empresa;
 
 
 public class MainActivity extends AppCompatActivity
@@ -26,7 +33,7 @@ public class MainActivity extends AppCompatActivity
 
     //variables de la activity
     public static int idEmpresa = 0;
-    public static String IP = "192.168.1.7";
+    public static String IP = "192.168.0.7";
     private Button login;
     private EditText txtUser, txtPass;
     Spinner sp_Empresas;

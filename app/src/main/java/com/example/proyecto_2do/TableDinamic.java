@@ -64,9 +64,11 @@ public class TableDinamic {
     }
 
     //CREA LA TABLE EN SI MISMA
-    private void createDataTable(ArrayList<String[]>datos){
+    private void createDataTable(ArrayList<String[]>data){
+        tableLayout.removeAllViews();
+        createHeader();
         String info;
-        for(indexR=1;indexR<=datos.size();indexR++){
+        for(indexR=1;indexR<=data.size();indexR++){
             newRow();
             for(indexC=0;indexC<=header.length;indexC++){
                 newCell();
@@ -77,9 +79,25 @@ public class TableDinamic {
             }
             tableLayout.addView(tableRow);
         }
+
     }
 
     //AÑADE ITEMS A LA TABLA
+    /*
+    public void addItems(String[]item){
+        String info;
+        data.add(item);
+        indexC=0;
+        newRow();
+        while (indexC< header.length){
+            newCell();
+            info=(indexC<item.length)?item[indexC++]:"";
+            txtCell.setText(info);
+            tableRow.addView(txtCell,newTableRowParams());
+        }
+        tableLayout.addView(tableRow);
+    }*/
+
     public void addItems(String[]item){
         String info;
         data.add(item);

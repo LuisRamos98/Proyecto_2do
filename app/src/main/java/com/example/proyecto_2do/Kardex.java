@@ -1,25 +1,30 @@
 package com.example.proyecto_2do;
 
-import Entidades.Categoria;
-import Entidades.Producto;
-import android.widget.*;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.database.Cursor;
-import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.view.View;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import Entidades.Categoria;
+import Entidades.Producto;
 
 public class Kardex extends AppCompatActivity
         implements Response.Listener<JSONObject>, Response.ErrorListener {
@@ -69,6 +74,7 @@ public class Kardex extends AppCompatActivity
     //FUNCION QUE ADQUIERE Y CREA LA TABLA DE CONTACTOS
     private ArrayList<String[]> ObtenerListaProducto(){
         //rows.add(new String[]{"1","pedro","lopez","persona","user"});
+        rows.clear();
         for(int i=0; i<listaProducto.size(); i++){
             rows.add(new String[]{String.valueOf(listaProducto.get(i).getCategoria()), listaProducto.get(i).getNombre_Producto(),
                     String.valueOf(listaProducto.get(i).getUnidades()),String.valueOf(listaProducto.get(i).getPrecio_Unitario()),
