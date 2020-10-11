@@ -1,0 +1,510 @@
+Index: app/src/main/java/com/example/proyecto_2do/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.proyecto_2do;\r\n\r\nimport Entidades.Empresa;\r\nimport android.widget.*;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport android.content.ClipData;\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.view.View;\r\nimport com.android.volley.Request;\r\nimport com.android.volley.RequestQueue;\r\nimport com.android.volley.Response;\r\nimport com.android.volley.VolleyError;\r\nimport com.android.volley.toolbox.JsonObjectRequest;\r\nimport com.android.volley.toolbox.Volley;\r\nimport org.json.JSONArray;\r\nimport org.json.JSONException;\r\nimport org.json.JSONObject;\r\n\r\nimport java.util.ArrayList;\r\n\r\n\r\npublic class MainActivity extends AppCompatActivity\r\n        implements Response.Listener<JSONObject>, Response.ErrorListener {\r\n\r\n    //variables de la activity\r\n    public static int idEmpresa = 0;\r\n    private Button login;\r\n    private EditText txtUser, txtPass;\r\n    Spinner sp_Empresas;\r\n    private Empresa empresa = null;\r\n    //arreglos para mostrar la informacion en el spiner\r\n    private ArrayList<Empresa> listaEmpresas;\r\n    private ArrayList<String> listafinal;\r\n    //Objetos que permiten la conexion con los webService\r\n    RequestQueue requestQueue;\r\n    JsonObjectRequest jsonObjectRequest;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_main);\r\n        listaEmpresas = new ArrayList<>();\r\n        //Instancia del objeto para la conexion remota\r\n        requestQueue = Volley.newRequestQueue(this);\r\n        //relacion logica-grafica\r\n        login = (Button)findViewById(R.id.btn_login);\r\n        txtUser = (EditText)findViewById(R.id.txtUser);\r\n        txtPass = (EditText)findViewById(R.id.txtPass);\r\n        sp_Empresas = (Spinner)findViewById(R.id.spEmpresa);\r\n        //llamada a metodo para cargar en el spiner las empresas\r\n        ConsultarEmpresas();\r\n        //modificar el evento click\r\n        login.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                //llamada al metodo para validar los datos en el login\r\n                Validarusuario();\r\n            }\r\n        });\r\n    }\r\n\r\n    private void ConsultarEmpresas() {\r\n        //llamada al WebService\r\n        String url = \"http://192.168.1.9/BDremota/consultas.php?opcion=1\";\r\n        url = url.replace(\" \",\"%20\");\r\n        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);\r\n        requestQueue.add(jsonObjectRequest);\r\n    }\r\n\r\n    private void Validarusuario() {\r\n        String user, pass;\r\n        //validamos que primero haya escogido una empresa antes de proceder a validar\r\n        if(idEmpresa != 0){\r\n            user = txtUser.getText().toString();\r\n            pass = txtPass.getText().toString();\r\n            String url = \"http://192.168.1.9/BDremota/consultas.php?opcion=3&empresa=\"+idEmpresa+\"&usuario=\"+user+\"&pass=\"+pass;\r\n            url = url.replace(\" \",\"%20\");\r\n            //llamada al WebService\r\n            jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);\r\n            requestQueue.add(jsonObjectRequest);\r\n        } else {\r\n            Toast.makeText(this, \"Seleccione Una Empresa Por Favor\", Toast.LENGTH_SHORT).show();\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public void onErrorResponse(VolleyError error) {\r\n    }\r\n\r\n    //metodo donde trataremos las respuestas del WebService\r\n    @Override\r\n    public void onResponse(JSONObject response) {\r\n        try {\r\n            //validamos la clave del objeto JSONArray\r\n            if(response.has(\"empresa\")) {\r\n                //Obtenemos el objeto JSONArray del objeto response que nos devuelve el WS\r\n                JSONArray json = response.getJSONArray(\"empresa\");\r\n                //recorremos el arreglo y obtenemos los datos\r\n                for (int i = 0; i < json.length(); i++) {\r\n                    empresa = new Empresa();\r\n                    JSONObject jsonObject = null;\r\n                    jsonObject = json.getJSONObject(i);\r\n                    empresa.setIdEmpresa(jsonObject.getInt(\"id\"));\r\n                    empresa.setRucEmpresa(jsonObject.optString(\"ruc\"));\r\n                    empresa.setNombreEmpresa(jsonObject.optString(\"nombre\"));\r\n                    listaEmpresas.add(empresa);\r\n                }\r\n                //llamada al metodo para llenar el spinner\r\n                obtenerlista();\r\n            } else if(response.has(\"Usuario\")){\r\n                //validar los datos deusario para el inicio de sesion\r\n                JSONArray json = response.getJSONArray(\"Usuario\");\r\n                JSONObject jsonObject = json.getJSONObject(0);\r\n                int id = jsonObject.getInt(\"id\");\r\n                if(id != 0){\r\n                    Intent sgt = new Intent(getApplicationContext(), Navegacion.class);\r\n                    startActivity(sgt);\r\n                    Toast.makeText(this, \"Bienvenido\", Toast.LENGTH_SHORT).show();\r\n                } else {\r\n                    Toast.makeText(this, \"Datos Erroneos\\nIntente Nuevamente\", Toast.LENGTH_SHORT).show();\r\n                    txtUser.setText(\"\");\r\n                    txtPass.setText(\"\");\r\n                }\r\n            }\r\n        } catch (JSONException e) {\r\n            e.printStackTrace();\r\n            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();\r\n        }\r\n    }\r\n\r\n    private void obtenerlista() {\r\n        listafinal = new ArrayList<String>();\r\n        listafinal.add(\"Seleccione\");\r\n        for(int i=0; i<listaEmpresas.size(); i++){\r\n            listafinal.add(listaEmpresas.get(i).getNombreEmpresa());\r\n        }\r\n        ArrayAdapter<CharSequence> adaptador = new ArrayAdapter(this, android.R.layout.simple_spinner_item, listafinal);\r\n        sp_Empresas.setAdapter(adaptador);\r\n        sp_Empresas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {\r\n            @Override\r\n            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {\r\n                if(i!=0){\r\n                    idEmpresa = listaEmpresas.get(i-1).getIdEmpresa();\r\n                }\r\n            }\r\n            @Override\r\n            public void onNothingSelected(AdapterView<?> adapterView) {\r\n\r\n            }\r\n        });\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/proyecto_2do/MainActivity.java	(revision 6993d28f642200ad79aea6799890665f78c5009c)
++++ app/src/main/java/com/example/proyecto_2do/MainActivity.java	(date 1601815253492)
+@@ -56,26 +56,26 @@
+             @Override
+             public void onClick(View view) {
+                 //llamada al metodo para validar los datos en el login
+-                Validarusuario();
++                ValidarUsuario();
+             }
+         });
+     }
+ 
+     private void ConsultarEmpresas() {
+         //llamada al WebService
+-        String url = "http://192.168.1.9/BDremota/consultas.php?opcion=1";
++        String url = "http://192.168.1.2/BDremota/consultas.php?opcion=1";
+         url = url.replace(" ","%20");
+         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
+         requestQueue.add(jsonObjectRequest);
+     }
+ 
+-    private void Validarusuario() {
++    private void ValidarUsuario() {
+         String user, pass;
+         //validamos que primero haya escogido una empresa antes de proceder a validar
+         if(idEmpresa != 0){
+             user = txtUser.getText().toString();
+             pass = txtPass.getText().toString();
+-            String url = "http://192.168.1.9/BDremota/consultas.php?opcion=3&empresa="+idEmpresa+"&usuario="+user+"&pass="+pass;
++            String url = "http://192.168.1.2/BDremota/consultas.php?opcion=3&empresa="+idEmpresa+"&usuario="+user+"&pass="+pass;
+             url = url.replace(" ","%20");
+             //llamada al WebService
+             jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
+@@ -85,45 +85,61 @@
+         }
+     }
+ 
+-    @Override
+-    public void onErrorResponse(VolleyError error) {
+-    }
+-
+-    //metodo donde trataremos las respuestas del WebService
++    //Funcion donde Se trata la respuesta del WebService
+     @Override
+     public void onResponse(JSONObject response) {
+-        try {
+-            //validamos la clave del objeto JSONArray
+-            if(response.has("empresa")) {
+-                //Obtenemos el objeto JSONArray del objeto response que nos devuelve el WS
+-                JSONArray json = response.getJSONArray("empresa");
+-                //recorremos el arreglo y obtenemos los datos
+-                for (int i = 0; i < json.length(); i++) {
+-                    empresa = new Empresa();
+-                    JSONObject jsonObject = null;
+-                    jsonObject = json.getJSONObject(i);
+-                    empresa.setIdEmpresa(jsonObject.getInt("id"));
+-                    empresa.setRucEmpresa(jsonObject.optString("ruc"));
+-                    empresa.setNombreEmpresa(jsonObject.optString("nombre"));
+-                    listaEmpresas.add(empresa);
+-                }
+-                //llamada al metodo para llenar el spinner
+-                obtenerlista();
+-            } else if(response.has("Usuario")){
+-                //validar los datos deusario para el inicio de sesion
+-                JSONArray json = response.getJSONArray("Usuario");
+-                JSONObject jsonObject = json.getJSONObject(0);
+-                int id = jsonObject.getInt("id");
+-                if(id != 0){
+-                    Intent sgt = new Intent(getApplicationContext(), Navegacion.class);
+-                    startActivity(sgt);
+-                    Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show();
+-                } else {
+-                    Toast.makeText(this, "Datos Erroneos\nIntente Nuevamente", Toast.LENGTH_SHORT).show();
+-                    txtUser.setText("");
+-                    txtPass.setText("");
+-                }
+-            }
++        //validamos la clave del objeto JSONArray
++        if(response.has("empresa")) {
++            CargarEmpresas(response);
++        } else if(response.has("Usuario")){
++            Login(response);
++        }
++    }
++
++    //Funcion que recepta el error en caso de existir cuando se llame al WS
++    @Override
++    public void onErrorResponse(VolleyError error) {
++    }
++
++    private void Login(JSONObject response){
++        try{
++            if(response.has("Usuario")){
++                //validar los datos deusario para el inicio de sesion
++                JSONArray json = response.getJSONArray("Usuario");
++                JSONObject jsonObject = json.getJSONObject(0);
++                int id = jsonObject.getInt("id");
++                if(id != 0){
++                    Intent sgt = new Intent(getApplicationContext(), Navegacion.class);
++                    startActivity(sgt);
++                    Toast.makeText(this, "Bienvenid@ "+jsonObject.getString("nombre"), Toast.LENGTH_SHORT).show();
++                } else {
++                    Toast.makeText(this, "Datos Erroneos\nIntente Nuevamente", Toast.LENGTH_SHORT).show();
++                    txtUser.setText("");
++                    txtPass.setText("");
++                }
++            }
++        } catch (JSONException e) {
++            e.printStackTrace();
++            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
++        }
++    }
++
++    private void CargarEmpresas(JSONObject response){
++        try {
++            //Obtenemos el objeto JSONArray del objeto response que nos devuelve el WS
++            JSONArray json = response.getJSONArray("empresa");
++            //recorremos el arreglo y obtenemos los datos
++            for (int i = 0; i < json.length(); i++) {
++                empresa = new Empresa();
++                JSONObject jsonObject = null;
++                jsonObject = json.getJSONObject(i);
++                empresa.setIdEmpresa(jsonObject.getInt("id"));
++                empresa.setRucEmpresa(jsonObject.optString("ruc"));
++                empresa.setNombreEmpresa(jsonObject.optString("nombre"));
++                listaEmpresas.add(empresa);
++            }
++            //llamada al metodo para llenar el spinner
++            obtenerlista();
+         } catch (JSONException e) {
+             e.printStackTrace();
+             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+@@ -147,7 +163,6 @@
+             }
+             @Override
+             public void onNothingSelected(AdapterView<?> adapterView) {
+-
+             }
+         });
+     }
+Index: app/src/main/java/com/example/proyecto_2do/AsignarRoles.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.proyecto_2do;\r\n\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport android.os.Bundle;\r\n\r\npublic class AsignarRoles extends AppCompatActivity {\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_asignar_roles);\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/proyecto_2do/AsignarRoles.java	(revision 6993d28f642200ad79aea6799890665f78c5009c)
++++ app/src/main/java/com/example/proyecto_2do/AsignarRoles.java	(date 1601846284378)
+@@ -1,15 +1,59 @@
+ package com.example.proyecto_2do;
+ 
++import android.view.View;
++import android.widget.Button;
++import android.widget.Spinner;
+ import androidx.appcompat.app.AppCompatActivity;
+ 
+ import android.os.Bundle;
++import com.android.volley.RequestQueue;
++import com.android.volley.Response;
++import com.android.volley.VolleyError;
++import com.android.volley.toolbox.JsonObjectRequest;
++import com.android.volley.toolbox.Volley;
++import org.json.JSONObject;
++
++public class AsignarRoles extends AppCompatActivity
++        implements Response.Listener<JSONObject>, Response.ErrorListener {
+ 
+-public class AsignarRoles extends AppCompatActivity {
++    private Spinner spRol1, spRol2, spUsuarios;
++    private Button btnAsignar;
++
++    RequestQueue requestQueue;
++    JsonObjectRequest jsonObjectRequest;
+ 
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_asignar_roles);
++        spRol1 = (Spinner)findViewById(R.id.spRol1);
++        spRol2 = (Spinner)findViewById(R.id.spRol2);
++        spUsuarios = (Spinner)findViewById(R.id.spUsuario);
++        btnAsignar =(Button)findViewById(R.id.btnAsignarCambiar);
++        requestQueue = Volley.newRequestQueue(this);
++        ConsultarRoles();
++        btnAsignar.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View view) {
++                ActualizarRol();
++            }
++        });
++    }
++
++    private void ConsultarRoles(){
++
+     }
+ 
++    private void ActualizarRol() {
++    }
++
++    @Override
++    public void onResponse(JSONObject response) {
++
++    }
++
++    @Override
++    public void onErrorResponse(VolleyError error) {
++
++    }
+ }
+\ No newline at end of file
+Index: app/src/main/java/com/example/proyecto_2do/AgregarMedidas.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.proyecto_2do;\r\n\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport android.os.Bundle;\r\n\r\npublic class AgregarMedidas extends AppCompatActivity {\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_agregar_medidas);\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/proyecto_2do/AgregarMedidas.java	(revision 6993d28f642200ad79aea6799890665f78c5009c)
++++ app/src/main/java/com/example/proyecto_2do/AgregarMedidas.java	(date 1601819152945)
+@@ -1,14 +1,97 @@
+ package com.example.proyecto_2do;
+ 
++import android.view.View;
++import android.widget.Button;
++import android.widget.EditText;
++import android.widget.Toast;
+ import androidx.appcompat.app.AppCompatActivity;
+ 
+ import android.os.Bundle;
++import com.android.volley.Request;
++import com.android.volley.RequestQueue;
++import com.android.volley.Response;
++import com.android.volley.VolleyError;
++import com.android.volley.toolbox.JsonObjectRequest;
++import com.android.volley.toolbox.Volley;
++import org.json.JSONArray;
++import org.json.JSONException;
++import org.json.JSONObject;
+ 
+-public class AgregarMedidas extends AppCompatActivity {
++public class AgregarMedidas extends AppCompatActivity
++        implements Response.Listener<JSONObject>, Response.ErrorListener {
++
++    //Variables de la activity
++    private EditText txtMedida;
++    private Button btnRegistrar;
++    //Variables para la conexion con el WebService
++    RequestQueue requestQueue;
++    JsonObjectRequest jsonObjectRequest;
+ 
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_agregar_medidas);
++        //relacion Logica-Grafica
++        txtMedida = (EditText)findViewById(R.id.txtMedida);
++        btnRegistrar = (Button)findViewById(R.id.btnRegistrarMedida);
++        //Instancia del objeto para la conexion remota
++        requestQueue = Volley.newRequestQueue(this);
++        //modificar el evento click
++        btnRegistrar.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View view) {
++                RegistarMedida();
++            }
++        });
++    }
++
++    //Funcion para registrar una nueva medida
++    private void RegistarMedida() {
++        //obtener el campo medida
++        String medida = txtMedida.getText().toString();
++        //validar que no se encuentre vacio
++        if(!medida.isEmpty()){
++            //llamada al WebService
++            String url = "http://192.168.1.2/BDremota/wsJSONRegistroMedida.php?empresa="+MainActivity.idEmpresa+"&medida="+medida;
++            url = url.replace(" ","%20");
++            jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
++            requestQueue.add(jsonObjectRequest);
++        } else {
++            Toast.makeText(getApplicationContext(), "¡Campo Vacio!\nIntente nuevamente", Toast.LENGTH_SHORT).show();
++        }
++    }
++
++    //Funcion donde Se trata la respuesta del WebService
++    @Override
++    public void onResponse(JSONObject response) {
++        int id_medida;
++        try {
++            //validamos la clave del objeto JSONArray
++            if(response.has("medida")){
++                //Obtenemos el objeto JSONArray del objeto response que nos devuelve el WS
++                JSONArray jsonArray = response.getJSONArray("medida");
++                //Obtenemos el primer objeto del arreglo json
++                JSONObject jsonObject = jsonArray.getJSONObject(0);
++                //Obtemos el dato de la clave id y lo guardamos
++                id_medida = jsonObject.getInt("id");
++                //Si el id es 0, quiere decir que el registro que se desea ingresar ya se encuentra en la BD
++                if(id_medida != 0){
++                    Toast.makeText(getApplicationContext(), "Registro con Exito", Toast.LENGTH_SHORT).show();
++                    txtMedida.setText("");
++                } else{
++                    Toast.makeText(getApplicationContext(), "Registro ya Existente\nintente Nuevamente", Toast.LENGTH_SHORT).show();
++                    txtMedida.setText("");
++                }
++            }
++        } catch(JSONException e){
++            e.printStackTrace();
++            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
++        }
++    }
++
++    //Funcion que recepta el error en caso de existir cuando se llame al WS
++    @Override
++    public void onErrorResponse(VolleyError error) {
++        Toast.makeText (getApplicationContext(), "No se pudo registrar\nError: "+error.toString(), Toast.LENGTH_SHORT).show();
+     }
+ }
+\ No newline at end of file
+Index: app/src/main/java/com/example/proyecto_2do/AgregarRoles.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.proyecto_2do;\r\n\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport android.os.Bundle;\r\n\r\npublic class AgregarRoles extends AppCompatActivity {\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_agregar_roles);\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/proyecto_2do/AgregarRoles.java	(revision 6993d28f642200ad79aea6799890665f78c5009c)
++++ app/src/main/java/com/example/proyecto_2do/AgregarRoles.java	(date 1601810728329)
+@@ -1,14 +1,98 @@
+ package com.example.proyecto_2do;
+ 
++import android.view.View;
++import android.widget.Button;
++import android.widget.EditText;
++import android.widget.Toast;
+ import androidx.appcompat.app.AppCompatActivity;
+ 
+ import android.os.Bundle;
++import com.android.volley.Request;
++import com.android.volley.RequestQueue;
++import com.android.volley.Response;
++import com.android.volley.VolleyError;
++import com.android.volley.toolbox.JsonObjectRequest;
++import com.android.volley.toolbox.Volley;
++import org.json.JSONArray;
++import org.json.JSONException;
++import org.json.JSONObject;
+ 
+-public class AgregarRoles extends AppCompatActivity {
++public class AgregarRoles extends AppCompatActivity
++        implements Response.Listener<JSONObject>, Response.ErrorListener{
++
++    //variables de la activity
++    private EditText txtRol;
++    private Button btnRegistrar;
++    //Variables para la conexion con el WebService
++    RequestQueue requestQueue;
++    JsonObjectRequest jsonObjectRequest;
+ 
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_agregar_roles);
++        //relacion Logica-Grafica
++        txtRol = (EditText)findViewById(R.id.txtRol);
++        btnRegistrar = (Button)findViewById(R.id.btnRegistarRol);
++        //Instancia del objeto para la conexion remota
++        requestQueue = Volley.newRequestQueue(this);
++        //modificar el evento click
++        btnRegistrar.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View view) {
++                RegistarRol();
++            }
++        });
++    }
++
++    //Funcion para registrar nuevos roles dentro de la aplicacion
++    private void RegistarRol() {
++        //obtener los roles
++        String rol = txtRol.getText().toString();
++        //Validar que no esten vacios
++        if(!rol.isEmpty()){
++            //Llamada al WebService
++            String url = "http://192.168.1.2/BDremota/wsJSONRegistroRol.php?empresa="+MainActivity.idEmpresa+"&rol="+rol;
++            url = url.replace(" ","%20");
++            jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
++            requestQueue.add(jsonObjectRequest);
++        } else {
++            //si el campo esta vacio le pide ingresar un valor
++            Toast.makeText(getApplicationContext(), "¡Campo Vacio!\nIntente nuevamente", Toast.LENGTH_SHORT).show();
++        }
++    }
++
++    //Funcion donde Se trata la respuesta del WebService
++    @Override
++    public void onResponse(JSONObject response) {
++        int id_rol;
++        try{
++            //validamos la clave del objeto JSONArray
++            if(response.has("rol")){
++                //Obtenemos el objeto JSONArray del objeto response que nos devuelve el WS
++                JSONArray jsonArray = response.getJSONArray("rol");
++                //Obtenemos el primer objeto del arreglo json
++                JSONObject jsonObject = jsonArray.getJSONObject(0);
++                //Obtemos el dato de la clave id y lo guardamos
++                id_rol = jsonObject.getInt("id");
++                //Si el id es 0, quiere decir que el registro que se desea ingresar ya se encuentra en la BD
++                if(id_rol != 0){
++                    Toast.makeText(getApplicationContext(), "Registro con Exito", Toast.LENGTH_SHORT).show();
++                    txtRol.setText("");
++                } else {
++                    Toast.makeText(getApplicationContext(), "Registro ya Existente\nintente Nuevamente", Toast.LENGTH_SHORT).show();
++                    txtRol.setText("");
++                }
++            }
++        } catch (JSONException e) {
++            e.printStackTrace();
++            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
++        }
++    }
++
++    //Funcion que recepta el error en caso de existir cuando se llame al WS
++    @Override
++    public void onErrorResponse(VolleyError error) {
++        Toast.makeText (getApplicationContext(), "No se pudo registrar\nError: "+error.toString(), Toast.LENGTH_SHORT).show();
+     }
+ }
+\ No newline at end of file
+Index: app/src/main/res/layout/activity_agregar_roles.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    tools:context=\".AgregarRoles\">\r\n\r\n    <ImageView\r\n        android:id=\"@+id/imageView3\"\r\n        android:layout_width=\"209dp\"\r\n        android:layout_height=\"173dp\"\r\n        android:layout_marginTop=\"32dp\"\r\n        app:layout_constraintBottom_toTopOf=\"@+id/txtRol\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintHorizontal_bias=\"0.485\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\"\r\n        app:layout_constraintVertical_bias=\"0.652\"\r\n        app:srcCompat=\"@mipmap/roles\" />\r\n\r\n    <EditText\r\n        android:id=\"@+id/txtRol\"\r\n        android:layout_width=\"221dp\"\r\n        android:layout_height=\"49dp\"\r\n        android:layout_marginStart=\"32dp\"\r\n        android:layout_marginTop=\"32dp\"\r\n        android:layout_marginEnd=\"32dp\"\r\n        android:ems=\"10\"\r\n        android:hint=\"Rol\"\r\n        android:inputType=\"textPersonName\"\r\n        app:layout_constraintBottom_toTopOf=\"@+id/button\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintHorizontal_bias=\"0.523\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\"\r\n        app:layout_constraintVertical_bias=\"0.906\" />\r\n\r\n    <Button\r\n        android:id=\"@+id/button\"\r\n        android:layout_width=\"233dp\"\r\n        android:layout_height=\"45dp\"\r\n        android:layout_marginStart=\"32dp\"\r\n        android:layout_marginEnd=\"32dp\"\r\n        android:background=\"@drawable/button_rounded\"\r\n        android:text=\"Registrar\"\r\n        android:textColor=\"#ffff\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\"\r\n        app:layout_constraintVertical_bias=\"0.693\" />\r\n\r\n</androidx.constraintlayout.widget.ConstraintLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/activity_agregar_roles.xml	(revision 6993d28f642200ad79aea6799890665f78c5009c)
++++ app/src/main/res/layout/activity_agregar_roles.xml	(date 1601807281198)
+@@ -29,7 +29,7 @@
+         android:ems="10"
+         android:hint="Rol"
+         android:inputType="textPersonName"
+-        app:layout_constraintBottom_toTopOf="@+id/button"
++        app:layout_constraintBottom_toTopOf="@+id/btnRegistarRol"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintHorizontal_bias="0.523"
+         app:layout_constraintStart_toStartOf="parent"
+@@ -37,7 +37,7 @@
+         app:layout_constraintVertical_bias="0.906" />
+ 
+     <Button
+-        android:id="@+id/button"
++        android:id="@+id/btnRegistarRol"
+         android:layout_width="233dp"
+         android:layout_height="45dp"
+         android:layout_marginStart="32dp"
+Index: app/src/main/res/layout/activity_agregar_medidas.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    tools:context=\".AgregarMedidas\">\r\n\r\n    <ImageView\r\n        android:id=\"@+id/imageView4\"\r\n        android:layout_width=\"218dp\"\r\n        android:layout_height=\"169dp\"\r\n        android:layout_marginStart=\"32dp\"\r\n        android:layout_marginTop=\"32dp\"\r\n        android:layout_marginEnd=\"32dp\"\r\n        android:layout_marginBottom=\"32dp\"\r\n        app:layout_constraintBottom_toTopOf=\"@+id/txtMedidas\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintHorizontal_bias=\"0.492\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\"\r\n        app:layout_constraintVertical_bias=\"0.727\"\r\n        app:srcCompat=\"@mipmap/abaco\" />\r\n\r\n    <EditText\r\n        android:id=\"@+id/txtMedidas\"\r\n        android:layout_width=\"225dp\"\r\n        android:layout_height=\"48dp\"\r\n        android:layout_marginStart=\"32dp\"\r\n        android:layout_marginEnd=\"32dp\"\r\n        android:ems=\"10\"\r\n        android:hint=\"Medidas\"\r\n        android:inputType=\"textPersonName\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\"\r\n        app:layout_constraintVertical_bias=\"0.581\" />\r\n\r\n    <Button\r\n        android:id=\"@+id/button2\"\r\n        android:layout_width=\"233dp\"\r\n        android:layout_height=\"45dp\"\r\n        android:layout_marginStart=\"32dp\"\r\n        android:layout_marginEnd=\"32dp\"\r\n        android:background=\"@drawable/button_rounded\"\r\n        android:text=\"Registrar\"\r\n        android:textColor=\"#ffff\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toBottomOf=\"@+id/txtMedidas\"\r\n        app:layout_constraintVertical_bias=\"0.252\" />\r\n\r\n</androidx.constraintlayout.widget.ConstraintLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/activity_agregar_medidas.xml	(revision 6993d28f642200ad79aea6799890665f78c5009c)
++++ app/src/main/res/layout/activity_agregar_medidas.xml	(date 1601811132385)
+@@ -14,7 +14,7 @@
+         android:layout_marginTop="32dp"
+         android:layout_marginEnd="32dp"
+         android:layout_marginBottom="32dp"
+-        app:layout_constraintBottom_toTopOf="@+id/txtMedidas"
++        app:layout_constraintBottom_toTopOf="@+id/txtMedida"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintHorizontal_bias="0.492"
+         app:layout_constraintStart_toStartOf="parent"
+@@ -23,7 +23,7 @@
+         app:srcCompat="@mipmap/abaco" />
+ 
+     <EditText
+-        android:id="@+id/txtMedidas"
++        android:id="@+id/txtMedida"
+         android:layout_width="225dp"
+         android:layout_height="48dp"
+         android:layout_marginStart="32dp"
+@@ -38,7 +38,7 @@
+         app:layout_constraintVertical_bias="0.581" />
+ 
+     <Button
+-        android:id="@+id/button2"
++        android:id="@+id/btnRegistrarMedida"
+         android:layout_width="233dp"
+         android:layout_height="45dp"
+         android:layout_marginStart="32dp"
+@@ -49,7 +49,7 @@
+         app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toBottomOf="@+id/txtMedidas"
++        app:layout_constraintTop_toBottomOf="@+id/txtMedida"
+         app:layout_constraintVertical_bias="0.252" />
+ 
+ </androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file

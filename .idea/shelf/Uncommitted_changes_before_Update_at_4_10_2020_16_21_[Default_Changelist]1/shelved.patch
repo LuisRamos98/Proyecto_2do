@@ -1,0 +1,446 @@
+Index: app/src/main/res/layout/activity_asignar_roles.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    tools:context=\".AsignarRoles\">\r\n\r\n    <TextView\r\n            android:id=\"@+id/textView3\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:text=\"ROL\"\r\n            android:textSize=\"24sp\"\r\n            app:layout_constraintBottom_toTopOf=\"@+id/spinner3\"\r\n            app:layout_constraintEnd_toEndOf=\"parent\"\r\n            app:layout_constraintStart_toStartOf=\"parent\"\r\n            app:layout_constraintTop_toBottomOf=\"@+id/imageView6\"\r\n            app:layout_constraintVertical_bias=\"0.757\"/>\r\n\r\n    <Spinner\r\n        android:id=\"@+id/spinner3\"\r\n        android:layout_width=\"0dp\"\r\n        android:layout_height=\"42dp\"\r\n        android:layout_marginStart=\"32dp\"\r\n        android:layout_marginEnd=\"32dp\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintHorizontal_bias=\"0.0\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\"\r\n        app:layout_constraintVertical_bias=\"0.355\" />\r\n\r\n    <Spinner\r\n        android:id=\"@+id/spinner5\"\r\n        android:layout_width=\"0dp\"\r\n        android:layout_height=\"42dp\"\r\n        android:layout_marginStart=\"32dp\"\r\n        android:layout_marginEnd=\"32dp\"\r\n        app:layout_constraintBottom_toTopOf=\"@+id/button4\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintHorizontal_bias=\"0.0\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toBottomOf=\"@+id/spinner\"\r\n        app:layout_constraintVertical_bias=\"0.6\" />\r\n\r\n    <TextView\r\n        android:id=\"@+id/textView2\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:text=\"USUARIO\"\r\n        android:textSize=\"24sp\"\r\n        app:layout_constraintBottom_toTopOf=\"@+id/spinner\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintHorizontal_bias=\"0.498\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toBottomOf=\"@+id/spinner3\"\r\n        app:layout_constraintVertical_bias=\"0.484\" />\r\n\r\n    <Spinner\r\n        android:id=\"@+id/spinner\"\r\n        android:layout_width=\"0dp\"\r\n        android:layout_height=\"42dp\"\r\n        android:layout_marginStart=\"32dp\"\r\n        android:layout_marginEnd=\"32dp\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintHorizontal_bias=\"0.0\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toBottomOf=\"@+id/spinner3\"\r\n        app:layout_constraintVertical_bias=\"0.178\" />\r\n\r\n    <ImageView\r\n            android:id=\"@+id/imageView6\"\r\n            android:layout_width=\"117dp\"\r\n            android:layout_height=\"93dp\"\r\n            app:layout_constraintBottom_toTopOf=\"@+id/spinner3\"\r\n            app:layout_constraintEnd_toEndOf=\"parent\"\r\n            app:layout_constraintStart_toStartOf=\"parent\"\r\n            app:layout_constraintTop_toTopOf=\"parent\"\r\n            app:layout_constraintVertical_bias=\"0.342\"\r\n            app:srcCompat=\"@mipmap/equipo\"/>\r\n\r\n    <Button\r\n        android:id=\"@+id/button4\"\r\n        android:layout_width=\"0dp\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginStart=\"32dp\"\r\n        android:layout_marginEnd=\"32dp\"\r\n        android:background=\"@drawable/button_rounded\"\r\n        android:text=\"Asignar/Cambiar\"\r\n        android:textColor=\"#ffff\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintHorizontal_bias=\"0.0\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\"\r\n        app:layout_constraintVertical_bias=\"0.955\" />\r\n\r\n    <TextView\r\n        android:id=\"@+id/textView8\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:text=\"NUEVO ROL\"\r\n        android:textSize=\"24sp\"\r\n        app:layout_constraintBottom_toTopOf=\"@+id/spinner5\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintHorizontal_bias=\"0.498\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toBottomOf=\"@+id/spinner\"\r\n        app:layout_constraintVertical_bias=\"0.514\" />\r\n\r\n</androidx.constraintlayout.widget.ConstraintLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/activity_asignar_roles.xml	(revision 6993d28f642200ad79aea6799890665f78c5009c)
++++ app/src/main/res/layout/activity_asignar_roles.xml	(date 1601837137328)
+@@ -12,14 +12,14 @@
+             android:layout_height="wrap_content"
+             android:text="ROL"
+             android:textSize="24sp"
+-            app:layout_constraintBottom_toTopOf="@+id/spinner3"
++            app:layout_constraintBottom_toTopOf="@+id/spRol1"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintStart_toStartOf="parent"
+             app:layout_constraintTop_toBottomOf="@+id/imageView6"
+             app:layout_constraintVertical_bias="0.757"/>
+ 
+     <Spinner
+-        android:id="@+id/spinner3"
++        android:id="@+id/spRol1"
+         android:layout_width="0dp"
+         android:layout_height="42dp"
+         android:layout_marginStart="32dp"
+@@ -32,17 +32,17 @@
+         app:layout_constraintVertical_bias="0.355" />
+ 
+     <Spinner
+-        android:id="@+id/spinner5"
+-        android:layout_width="0dp"
+-        android:layout_height="42dp"
+-        android:layout_marginStart="32dp"
+-        android:layout_marginEnd="32dp"
+-        app:layout_constraintBottom_toTopOf="@+id/button4"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintHorizontal_bias="0.0"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toBottomOf="@+id/spinner"
+-        app:layout_constraintVertical_bias="0.6" />
++            android:id="@+id/spRol2"
++            android:layout_width="0dp"
++            android:layout_height="42dp"
++            android:layout_marginStart="32dp"
++            android:layout_marginEnd="32dp"
++            app:layout_constraintBottom_toTopOf="@+id/btnAsignarCambiar"
++            app:layout_constraintEnd_toEndOf="parent"
++            app:layout_constraintHorizontal_bias="0.0"
++            app:layout_constraintStart_toStartOf="parent"
++            app:layout_constraintTop_toBottomOf="@+id/spUsuario"
++            app:layout_constraintVertical_bias="0.54"/>
+ 
+     <TextView
+         android:id="@+id/textView2"
+@@ -50,15 +50,15 @@
+         android:layout_height="wrap_content"
+         android:text="USUARIO"
+         android:textSize="24sp"
+-        app:layout_constraintBottom_toTopOf="@+id/spinner"
++        app:layout_constraintBottom_toTopOf="@+id/spUsuario"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintHorizontal_bias="0.498"
+         app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toBottomOf="@+id/spinner3"
++        app:layout_constraintTop_toBottomOf="@+id/spRol1"
+         app:layout_constraintVertical_bias="0.484" />
+ 
+     <Spinner
+-        android:id="@+id/spinner"
++        android:id="@+id/spUsuario"
+         android:layout_width="0dp"
+         android:layout_height="42dp"
+         android:layout_marginStart="32dp"
+@@ -67,14 +67,14 @@
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintHorizontal_bias="0.0"
+         app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toBottomOf="@+id/spinner3"
++        app:layout_constraintTop_toBottomOf="@+id/spRol1"
+         app:layout_constraintVertical_bias="0.178" />
+ 
+     <ImageView
+             android:id="@+id/imageView6"
+             android:layout_width="117dp"
+             android:layout_height="93dp"
+-            app:layout_constraintBottom_toTopOf="@+id/spinner3"
++            app:layout_constraintBottom_toTopOf="@+id/spRol1"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintStart_toStartOf="parent"
+             app:layout_constraintTop_toTopOf="parent"
+@@ -82,7 +82,7 @@
+             app:srcCompat="@mipmap/equipo"/>
+ 
+     <Button
+-        android:id="@+id/button4"
++        android:id="@+id/btnAsignarCambiar"
+         android:layout_width="0dp"
+         android:layout_height="wrap_content"
+         android:layout_marginStart="32dp"
+@@ -103,11 +103,11 @@
+         android:layout_height="wrap_content"
+         android:text="NUEVO ROL"
+         android:textSize="24sp"
+-        app:layout_constraintBottom_toTopOf="@+id/spinner5"
++        app:layout_constraintBottom_toTopOf="@+id/spRol2"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintHorizontal_bias="0.498"
+         app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toBottomOf="@+id/spinner"
++        app:layout_constraintTop_toBottomOf="@+id/spUsuario"
+         app:layout_constraintVertical_bias="0.514" />
+ 
+ </androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
+Index: app/src/main/java/com/example/proyecto_2do/AgregarUsuario.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.proyecto_2do;\r\n\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport android.os.Bundle;\r\n\r\npublic class AgregarUsuario extends AppCompatActivity {\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_agregar_usuario);\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/proyecto_2do/AgregarUsuario.java	(revision 6993d28f642200ad79aea6799890665f78c5009c)
++++ app/src/main/java/com/example/proyecto_2do/AgregarUsuario.java	(date 1601836401103)
+@@ -1,14 +1,120 @@
+ package com.example.proyecto_2do;
+ 
++import Entidades.Usuario;
++import android.view.View;
++import android.widget.Button;
++import android.widget.EditText;
++import android.widget.Toast;
+ import androidx.appcompat.app.AppCompatActivity;
+ 
+ import android.os.Bundle;
++import com.android.volley.Request;
++import com.android.volley.RequestQueue;
++import com.android.volley.Response;
++import com.android.volley.VolleyError;
++import com.android.volley.toolbox.JsonObjectRequest;
++import com.android.volley.toolbox.Volley;
++import org.json.JSONArray;
++import org.json.JSONException;
++import org.json.JSONObject;
+ 
+-public class AgregarUsuario extends AppCompatActivity {
++public class AgregarUsuario extends AppCompatActivity
++        implements Response.Listener<JSONObject>, Response.ErrorListener {
++
++    //Variables de la activity
++    private EditText txtNombre, txtApellido, txtCedula, txtCorreo, txtUsuario, txtPass;
++    private Button btnRegistar;
++    //Variables para la conexion con el WebService
++    RequestQueue requestQueue;
++    JsonObjectRequest jsonObjectRequest;
+ 
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_agregar_usuario);
++        //relacion Logica-Grafica
++        txtNombre = (EditText)findViewById(R.id.txtNombre);
++        txtApellido = (EditText)findViewById(R.id.txtApellido);
++        txtCedula = (EditText)findViewById(R.id.txtCedula);
++        txtCorreo = (EditText)findViewById(R.id.txtCorreo);
++        txtUsuario = (EditText)findViewById(R.id.txtUser);
++        txtPass = (EditText)findViewById(R.id.txtPass);
++        btnRegistar = (Button)findViewById(R.id.btnRegistrarUsuario);
++        //Instancia del objeto para la conexion remota
++        requestQueue = Volley.newRequestQueue(this);
++        //modificar el evento click
++        btnRegistar.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View view) {
++                RegistrarUsuario();
++            }
++        });
++    }
++
++    //Funcion para registrar usuarios
++    private void RegistrarUsuario() {
++        String nombre, apellido, ci, correo, usuario, pass;
++        nombre = txtNombre.getText().toString();
++        apellido = txtApellido.getText().toString();
++        ci = txtCedula.getText().toString();
++        correo = txtCorreo.getText().toString();
++        usuario = txtUsuario.getText().toString();
++        pass = txtPass.getText().toString();
++        if(!nombre.isEmpty() && !apellido.isEmpty() && !ci.isEmpty() && !correo.isEmpty() && !usuario.isEmpty() && !pass.isEmpty()){
++            //llamada al WebService
++            String url = "http://192.168.1.2/BDremota/wsJSONRegistrousuario.php?empresa="+MainActivity.idEmpresa
++                    +"&cedula="+ci+"&nombre="+nombre+"&apellido="+apellido+"&correo="+correo+"&user="
++                    +usuario+"&pass="+pass;
++            url = url.replace(" ","%20");
++            jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
++            requestQueue.add(jsonObjectRequest);
++        } else {
++            Toast.makeText(getApplicationContext(), "¡Campo Vacio!\nIntente nuevamente", Toast.LENGTH_SHORT).show();
++        }
++    }
++
++    //Funcion donde Se trata la respuesta del WebService
++    @Override
++    public void onResponse(JSONObject response) {
++        if(response.has("Usuario")){
++            ValidarRegistroUsuario(response);
++        }
++    }
++
++    //Funcion para validar si el usuario ya esta registrado o no
++    private void ValidarRegistroUsuario(JSONObject response) {
++        int id_usuario;
++        try {
++            JSONArray jsonArray = response.getJSONArray("Usuario");
++            JSONObject jsonObject = jsonArray.getJSONObject(0);
++            id_usuario = jsonObject.getInt("id");
++            if(id_usuario != 0){
++                Toast.makeText(getApplicationContext(), "Registro con Exito", Toast.LENGTH_SHORT).show();
++                LimpiarCampos();
++            } else{
++                Toast.makeText(getApplicationContext(), "Registro ya Existente en Usuario o CI\nintente Nuevamente", Toast.LENGTH_SHORT).show();
++                txtUsuario.setText("");
++                txtCedula.setText("");
++            }
++        } catch(JSONException e){
++            e.printStackTrace();
++            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
++        }
++    }
++
++    //Funcion para limpiar los campos de texto de las vistas
++    private void LimpiarCampos() {
++        txtNombre.setText("");
++        txtApellido.setText("");
++        txtCedula.setText("");
++        txtCorreo.setText("");
++        txtUsuario.setText("");
++        txtPass.setText("");
++    }
++
++    //Funcion que recepta el error en caso de existir cuando se llame al WS
++    @Override
++    public void onErrorResponse(VolleyError error) {
++        Toast.makeText (getApplicationContext(), "No se pudo registrar\nError: "+error.toString(), Toast.LENGTH_SHORT).show();
+     }
+ }
+\ No newline at end of file
+Index: app/src/main/res/layout/activity_agregar_usuario.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    tools:context=\".AgregarUsuario\">\r\n\r\n\r\n    <ImageView\r\n        android:id=\"@+id/imageView5\"\r\n        android:layout_width=\"141dp\"\r\n        android:layout_height=\"108dp\"\r\n        android:layout_marginTop=\"8dp\"\r\n        app:layout_constraintBottom_toTopOf=\"@+id/scrollView2\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintHorizontal_bias=\"0.502\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\"\r\n        app:layout_constraintVertical_bias=\"0.794\"\r\n        app:srcCompat=\"@mipmap/granjero\" />\r\n\r\n    <ScrollView\r\n        android:id=\"@+id/scrollView2\"\r\n        android:layout_width=\"259dp\"\r\n        android:layout_height=\"138dp\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintHorizontal_bias=\"0.504\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\"\r\n        app:layout_constraintVertical_bias=\"0.464\">\r\n\r\n        <LinearLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:orientation=\"vertical\">\r\n\r\n            <EditText\r\n                android:id=\"@+id/editTextTextPersonName4\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_marginStart=\"32dp\"\r\n                android:layout_marginEnd=\"32dp\"\r\n                android:ems=\"10\"\r\n                android:hint=\"Nombre\"\r\n                android:inputType=\"textPersonName\" />\r\n\r\n            <EditText\r\n                android:id=\"@+id/editTextTextPersonName5\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_marginStart=\"32dp\"\r\n                android:layout_marginEnd=\"32dp\"\r\n                android:ems=\"10\"\r\n                android:hint=\"Apellido\"\r\n                android:inputType=\"textPersonName\" />\r\n\r\n            <EditText\r\n                android:id=\"@+id/editTextTextPersonName11\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_marginStart=\"32dp\"\r\n                android:layout_marginEnd=\"32dp\"\r\n                android:ems=\"10\"\r\n                android:hint=\"Cedula\"\r\n                android:inputType=\"textPersonName\" />\r\n\r\n            <EditText\r\n                android:id=\"@+id/editTextTextPersonName12\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_marginStart=\"32dp\"\r\n                android:layout_marginEnd=\"32dp\"\r\n                android:ems=\"10\"\r\n                android:hint=\"Correo\"\r\n                android:inputType=\"textPersonName\" />\r\n\r\n            <EditText\r\n                android:id=\"@+id/editTextTextPersonName13\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_marginStart=\"32dp\"\r\n                android:layout_marginEnd=\"32dp\"\r\n                android:ems=\"10\"\r\n                android:hint=\"Usario\"\r\n                android:inputType=\"textPersonName\" />\r\n\r\n            <EditText\r\n                android:id=\"@+id/editTextTextPersonName14\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_marginStart=\"32dp\"\r\n                android:layout_marginEnd=\"32dp\"\r\n                android:ems=\"10\"\r\n                android:hint=\"Contraseña\"\r\n                android:inputType=\"textPersonName\" />\r\n\r\n        </LinearLayout>\r\n    </ScrollView>\r\n\r\n    <Button\r\n        android:id=\"@+id/button3\"\r\n        android:layout_width=\"232dp\"\r\n        android:layout_height=\"45dp\"\r\n        android:background=\"@drawable/button_rounded\"\r\n        android:text=\"Registrar\"\r\n        android:textColor=\"#ffff\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toBottomOf=\"@+id/scrollView2\" />\r\n\r\n</androidx.constraintlayout.widget.ConstraintLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/activity_agregar_usuario.xml	(revision 6993d28f642200ad79aea6799890665f78c5009c)
++++ app/src/main/res/layout/activity_agregar_usuario.xml	(date 1601819153403)
+@@ -8,107 +8,107 @@
+ 
+ 
+     <ImageView
+-        android:id="@+id/imageView5"
+-        android:layout_width="141dp"
+-        android:layout_height="108dp"
+-        android:layout_marginTop="8dp"
+-        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintHorizontal_bias="0.502"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent"
+-        app:layout_constraintVertical_bias="0.794"
+-        app:srcCompat="@mipmap/granjero" />
++            android:id="@+id/imageView5"
++            android:layout_width="141dp"
++            android:layout_height="108dp"
++            android:layout_marginTop="8dp"
++            app:layout_constraintBottom_toTopOf="@+id/scrollView2"
++            app:layout_constraintEnd_toEndOf="parent"
++            app:layout_constraintStart_toStartOf="parent"
++            app:layout_constraintTop_toTopOf="parent"
++            app:layout_constraintVertical_bias="0.628"
++            app:srcCompat="@mipmap/granjero"/>
+ 
+     <ScrollView
+-        android:id="@+id/scrollView2"
+-        android:layout_width="259dp"
+-        android:layout_height="138dp"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintHorizontal_bias="0.504"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent"
+-        app:layout_constraintVertical_bias="0.464">
++            android:id="@+id/scrollView2"
++            android:layout_width="249dp"
++            android:layout_height="304dp"
++            app:layout_constraintBottom_toBottomOf="parent"
++            app:layout_constraintEnd_toEndOf="parent"
++            app:layout_constraintStart_toStartOf="parent"
++            app:layout_constraintTop_toTopOf="parent"
++            app:layout_constraintVertical_bias="0.557">
+ 
+         <LinearLayout
+-            android:layout_width="match_parent"
+-            android:layout_height="wrap_content"
+-            android:orientation="vertical">
++                android:layout_width="match_parent"
++                android:layout_height="match_parent"
++                android:orientation="vertical">
+ 
+             <EditText
+-                android:id="@+id/editTextTextPersonName4"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:layout_marginStart="32dp"
+-                android:layout_marginEnd="32dp"
+-                android:ems="10"
+-                android:hint="Nombre"
+-                android:inputType="textPersonName" />
++                    android:id="@+id/txtNombre"
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_marginStart="32dp"
++                    android:layout_marginEnd="32dp"
++                    android:ems="10"
++                    android:hint="Nombre"
++                    android:inputType="textPersonName"/>
+ 
+             <EditText
+-                android:id="@+id/editTextTextPersonName5"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:layout_marginStart="32dp"
+-                android:layout_marginEnd="32dp"
+-                android:ems="10"
+-                android:hint="Apellido"
+-                android:inputType="textPersonName" />
++                    android:id="@+id/txtApellido"
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_marginStart="32dp"
++                    android:layout_marginEnd="32dp"
++                    android:ems="10"
++                    android:hint="Apellido"
++                    android:inputType="textPersonName"/>
+ 
+             <EditText
+-                android:id="@+id/editTextTextPersonName11"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:layout_marginStart="32dp"
+-                android:layout_marginEnd="32dp"
+-                android:ems="10"
+-                android:hint="Cedula"
+-                android:inputType="textPersonName" />
++                    android:id="@+id/txtCedula"
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_marginStart="32dp"
++                    android:layout_marginEnd="32dp"
++                    android:ems="10"
++                    android:hint="Cedula"
++                    android:inputType="textPersonName"/>
+ 
+             <EditText
+-                android:id="@+id/editTextTextPersonName12"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:layout_marginStart="32dp"
+-                android:layout_marginEnd="32dp"
+-                android:ems="10"
+-                android:hint="Correo"
+-                android:inputType="textPersonName" />
++                    android:id="@+id/txtCorreo"
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_marginStart="32dp"
++                    android:layout_marginEnd="32dp"
++                    android:ems="10"
++                    android:hint="Correo"
++                    android:inputType="textPersonName"/>
+ 
+             <EditText
+-                android:id="@+id/editTextTextPersonName13"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:layout_marginStart="32dp"
+-                android:layout_marginEnd="32dp"
+-                android:ems="10"
+-                android:hint="Usario"
+-                android:inputType="textPersonName" />
++                    android:id="@+id/txtUser"
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_marginStart="32dp"
++                    android:layout_marginEnd="32dp"
++                    android:ems="10"
++                    android:hint="Usario"
++                    android:inputType="textPersonName"/>
+ 
+             <EditText
+-                android:id="@+id/editTextTextPersonName14"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:layout_marginStart="32dp"
+-                android:layout_marginEnd="32dp"
+-                android:ems="10"
+-                android:hint="Contraseña"
+-                android:inputType="textPersonName" />
++                    android:id="@+id/txtPass"
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_marginStart="32dp"
++                    android:layout_marginEnd="32dp"
++                    android:ems="10"
++                    android:hint="Contraseña"
++                    android:inputType="textPersonName"/>
+ 
+         </LinearLayout>
+     </ScrollView>
+ 
+     <Button
+-        android:id="@+id/button3"
+-        android:layout_width="232dp"
+-        android:layout_height="45dp"
+-        android:background="@drawable/button_rounded"
+-        android:text="Registrar"
+-        android:textColor="#ffff"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
++            android:id="@+id/btnRegistrarUsuario"
++            android:layout_width="232dp"
++            android:layout_height="45dp"
++            android:background="@drawable/button_rounded"
++            android:text="Registrar"
++            android:textColor="#ffff"
++            app:layout_constraintBottom_toBottomOf="parent"
++            app:layout_constraintEnd_toEndOf="parent"
++            app:layout_constraintStart_toStartOf="parent"
++            app:layout_constraintTop_toBottomOf="@+id/scrollView2"
++            app:layout_constraintHorizontal_bias="0.497"
++            app:layout_constraintVertical_bias="0.236"/>
+ 
+ </androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
